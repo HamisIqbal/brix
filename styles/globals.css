@@ -1,0 +1,223 @@
+@import "tailwindcss";
+@import "./tokens.css";
+@import "./typography.css";
+@import "./motion.css";
+
+@theme inline {
+  --color-black: var(--ink-000);
+  --color-ink-050: var(--ink-050);
+  --color-ink-100: var(--ink-100);
+  --color-ink-200: var(--ink-200);
+  --color-ink-300: var(--ink-300);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-600: var(--ink-600);
+  --color-white: var(--brix-white);
+  --color-gray: var(--brix-gray);
+  --color-red: var(--brix-red);
+  --color-red-deep: var(--brix-red-deep);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+  --radius-none: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reset
+   ───────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  /* Shape language §4.1: radius 0 everywhere, no exceptions. */
+  border-radius: 0 !important;
+}
+
+html {
+  /* The ground is black from the first painted frame. No white flash, ever. */
+  background: var(--ink-000);
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  /* Clears the fixed mobile action bar (§9.7). */
+  padding-bottom: 56px;
+  background: var(--ink-000);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 0;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+ul,
+ol,
+dl {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--brix-red-deep);
+  color: var(--brix-white);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Grid — visual design system §3.3
+   One grid provides contained and full-bleed placement.
+   ───────────────────────────────────────────────────────────── */
+
+.page-grid {
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--margin), 1fr)
+    [content-start] repeat(var(--columns), minmax(0, calc(var(--grid-max) / var(--columns))))
+    [content-end] minmax(var(--margin), 1fr)
+    [full-end];
+  column-gap: var(--gutter);
+}
+
+.grid-content {
+  grid-column: content;
+}
+
+.grid-full {
+  grid-column: full;
+}
+
+/* Inner grid for laying out within a content band. */
+.sub-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  column-gap: var(--gutter);
+}
+
+/* Running-bond offset — §3.4. Zero below md, per the mobile exception. */
+.bond {
+  margin-top: 0;
+}
+@media (min-width: 768px) {
+  .bond {
+    margin-top: calc(var(--gutter) * 2);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Utility
+   ───────────────────────────────────────────────────────────── */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: var(--z-skip);
+  padding: var(--space-3) var(--space-5);
+  background: var(--brix-white);
+  color: var(--ink-000);
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  letter-spacing: var(--tr-label);
+  text-transform: uppercase;
+  transform: translateY(-200%);
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+.hairline {
+  border: 0;
+  height: 1px;
+  background: var(--border-hair);
+  width: 100%;
+}
+
+.measure {
+  max-width: var(--measure-body);
+}
+.measure-lead {
+  max-width: var(--measure-lead);
+}
+
+/* Section spacing — §3.6 */
+.section {
+  position: relative;
+  padding-block: var(--space-section);
+}
+.section--sm {
+  padding-block: var(--space-section-sm);
+}
+.section--lg {
+  padding-block: var(--space-section-lg);
+}
+.section--flush {
+  padding-block: 0;
+}

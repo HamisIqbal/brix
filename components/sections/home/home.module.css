@@ -1,0 +1,568 @@
+/* ── COURSE 01 · HERO — "The First Course" ─────────────────── */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 86svh;
+  align-content: end;
+  padding-top: calc(var(--rail-h) + var(--space-16));
+  padding-bottom: var(--space-16);
+  row-gap: var(--space-10);
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 100svh;
+    align-content: center;
+    padding-top: calc(var(--rail-h) + var(--space-12));
+    padding-bottom: var(--space-24);
+  }
+}
+
+.heroInner {
+  grid-column: content;
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: var(--space-12);
+}
+
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+.heroHeadline {
+  /* The second line carries the bond offset in space, as the 80ms beat
+     carries it in time. Held on mobile — it is the brand signature (§3.4). */
+  display: flex;
+  flex-direction: column;
+}
+
+/* display-1 is specified for a full-width headline; here it shares the course
+   with the video plate, so it is sized to its own column instead of the
+   viewport. The token is unchanged — this is a per-composition override. */
+@media (min-width: 1024px) {
+  .heroHeadline {
+    font-size: clamp(4rem, 10.5vw, 11rem);
+  }
+}
+.heroHeadline > span:nth-child(2) {
+  margin-left: 12px;
+}
+@media (min-width: 768px) {
+  .heroHeadline > span:nth-child(2) {
+    margin-left: var(--bond-offset);
+  }
+}
+
+.heroSub {
+  max-width: 40ch;
+  color: var(--text-primary);
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+}
+
+.heroNote {
+  color: var(--text-secondary);
+}
+
+/* ── The hero ground: three plates, laid one over the next ── */
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--ink-100);
+  pointer-events: none;
+}
+
+.backdropStack {
+  position: absolute;
+  inset: 0;
+}
+
+.backdropSlide {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  /* Off to the right, waiting to be laid. */
+  transform: translate3d(101%, 0, 0);
+  transition: transform 1100ms var(--ease-structural);
+  will-change: transform;
+}
+/* The plate in place. */
+.backdropSlideActive {
+  z-index: 2;
+  transform: translate3d(0, 0, 0);
+}
+/* The plate it covered, carried a little further left as it goes under. */
+.backdropSlidePrev {
+  z-index: 1;
+  transform: translate3d(-14%, 0, 0);
+}
+
+.backdropImage {
+  object-fit: cover;
+  /* The same unified grade the stills carry. Static, never animated. */
+  filter: saturate(0.72) contrast(1.1) brightness(0.94);
+}
+
+/* The ground is dropped far enough that the headline, the sub and the strip
+   all clear contrast against it at any point in the loop. */
+.backdropOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background:
+    linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.9) 0%,
+      rgba(0, 0, 0, 0.78) 42%,
+      rgba(0, 0, 0, 0.5) 100%
+    ),
+    linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.2) 55%);
+}
+
+.backdropIndex {
+  position: absolute;
+  z-index: 4;
+  right: var(--margin);
+  bottom: var(--space-8);
+  display: flex;
+  gap: 6px;
+}
+.backdropTick {
+  width: 22px;
+  height: 2px;
+  background: var(--ink-600);
+  transition: background var(--dur-quick) var(--ease-set);
+}
+.backdropTickOn {
+  background: var(--brix-red);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backdropSlide {
+    transition: none;
+  }
+}
+
+.backdropCaption {
+  position: absolute;
+  z-index: 4;
+  right: var(--margin);
+  bottom: calc(var(--space-8) + var(--space-4));
+  color: var(--text-secondary);
+  display: none;
+}
+@media (min-width: 768px) {
+  .backdropCaption {
+    display: block;
+  }
+}
+
+.heroStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-6);
+  padding-top: var(--space-6);
+  color: var(--text-secondary);
+}
+
+/* ── The video plate ───────────────────────────────────────── */
+
+.plate {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-100);
+  /* Ratio steps by breakpoint so the portrait source is never squeezed into
+     a wide box, and never so tall it pushes the CTA off a phone screen. */
+  aspect-ratio: 4 / 5;
+  width: 100%;
+}
+@media (min-width: 600px) {
+  .plate {
+    aspect-ratio: 1 / 1;
+  }
+}
+@media (min-width: 768px) {
+  .plate {
+    aspect-ratio: 4 / 3;
+  }
+}
+@media (min-width: 1024px) {
+  .plate {
+    /* Native 9:16 on desktop — no crop at all. */
+    aspect-ratio: 9 / 16;
+    max-height: 78svh;
+    margin-left: auto;
+    width: auto;
+    height: 78svh;
+  }
+}
+
+/* In COURSE 05 the video sits in the section's own column, so it takes the
+   column's width and a plate ratio rather than the viewport height. */
+.methodVideo {
+  aspect-ratio: 3 / 4;
+}
+@media (min-width: 1024px) {
+  .methodVideo {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    margin-left: 0;
+    aspect-ratio: 3 / 4;
+  }
+}
+
+.plateMedia,
+.platePoster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The same unified grade the stills carry, so the video band belongs to the
+     same body of work. Static, never animated. */
+  filter: saturate(0.72) contrast(1.1) brightness(0.94);
+}
+
+.plateMedia {
+  opacity: 0;
+  transition: opacity 240ms var(--ease-set);
+  z-index: 1;
+}
+.plateMediaReady {
+  opacity: 1;
+}
+
+.plateScrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0) 45%);
+}
+
+.plateCaption {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-4);
+  z-index: 3;
+  color: var(--brix-white);
+}
+
+.playButton {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  color: var(--brix-white);
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* ── Scroll cue (D8 stack + apex) ──────────────────────────── */
+
+.cue {
+  grid-column: content;
+  /* Above the ground, like the copy — the backdrop is a stacking context. */
+  position: relative;
+  z-index: 1;
+  display: none;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+}
+@media (min-width: 1024px) {
+  .cue {
+    display: flex;
+  }
+}
+
+.cueStack {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 16px;
+}
+.cueBar {
+  height: 2px;
+  background: var(--ink-600);
+  width: 100%;
+}
+.cueBar:nth-child(2) {
+  width: 72%;
+}
+.cueBar:nth-child(3) {
+  width: 44%;
+}
+
+/* The apex itself does not move. A bouncing chevron is banned (§7.6). */
+.cueActive .cueBar {
+  animation: cue-course 2.4s var(--ease-set) infinite;
+}
+.cueActive .cueBar:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.cueActive .cueBar:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cueActive .cueBar {
+    animation: none;
+  }
+}
+
+/* ── COURSE 02 · THE ARGUMENT ──────────────────────────────── */
+
+.argument {
+  row-gap: var(--space-16);
+}
+.argumentInner {
+  grid-column: content;
+  display: grid;
+  gap: var(--space-12);
+}
+@media (min-width: 1024px) {
+  .argumentInner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--space-16);
+    align-items: center;
+  }
+}
+.argumentCopy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+.argumentBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: var(--measure-lead);
+  color: var(--text-secondary);
+}
+.argumentActions {
+  margin-top: var(--space-4);
+}
+
+/* ── COURSE 03 · WHAT WE LAY — one course, six cells ───────── */
+
+.band {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border-hair);
+  border-block: 1px solid var(--border-hair);
+}
+@media (min-width: 768px) {
+  .band {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .band {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-height: 160px;
+  padding: var(--space-6) var(--space-5);
+  background: var(--ink-000);
+  transition: background-color var(--dur-quick) var(--ease-set);
+}
+@media (min-width: 1024px) {
+  .cell {
+    min-height: 200px;
+  }
+}
+.cellIndex {
+  color: var(--text-secondary);
+  transition: color var(--dur-instant) var(--ease-set);
+}
+.cellName {
+  margin-top: auto;
+}
+.cellSpec {
+  color: var(--text-secondary);
+}
+@media (hover: hover) and (pointer: fine) {
+  .cell:hover {
+    background: var(--ink-100);
+  }
+  .cell:hover .cellIndex {
+    color: var(--brix-red);
+  }
+}
+
+/* ── COURSE 04 · SELECTED ──────────────────────────────────── */
+
+.featured {
+  position: relative;
+  grid-column: full;
+  margin-top: var(--space-16);
+  overflow: hidden;
+}
+.featuredMask {
+  aspect-ratio: 16 / 10;
+}
+@media (max-width: 767px) {
+  .featuredMask {
+    aspect-ratio: 4 / 3;
+  }
+}
+.featuredOverlay {
+  position: absolute;
+  left: var(--margin);
+  bottom: var(--space-8);
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--brix-white);
+}
+
+/* ── COURSE 05 · METHOD ────────────────────────────────────── */
+
+.methodInner {
+  grid-column: content;
+  display: grid;
+  gap: var(--space-12);
+}
+@media (min-width: 1024px) {
+  .methodInner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-16);
+  }
+}
+
+.steps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding-left: var(--space-8);
+}
+/* The string line: one scrubbed red rule down the four stages. */
+.stringLine {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: var(--brix-red);
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+.step {
+  display: grid;
+  gap: var(--space-2);
+  padding-block: var(--space-8);
+  border-bottom: 1px solid var(--border-hair);
+}
+.step:last-child {
+  border-bottom: 0;
+}
+.stepHead {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+.stepIndex {
+  color: var(--brix-red);
+}
+.stepBody {
+  color: var(--text-secondary);
+  max-width: 46ch;
+}
+
+/* ── COURSE 06 · MATERIAL — the diptych ────────────────────── */
+
+.diptych {
+  grid-column: content;
+  display: grid;
+  gap: var(--joint-md);
+  margin-top: var(--space-16);
+}
+@media (min-width: 768px) {
+  .diptych {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+  /* The second plate is offset by half a course, as brick is. */
+  .diptych > *:nth-child(2) {
+    margin-top: var(--space-16);
+  }
+}
+
+/* ── The spec strip — the one scroll-velocity element ──────── */
+
+.specStrip {
+  grid-column: full;
+  overflow: hidden;
+  border-block: 1px solid var(--border-hair);
+  padding-block: var(--space-4);
+  margin-block: var(--space-16);
+}
+@media (max-width: 767px) {
+  .specStrip {
+    display: none;
+  }
+}
+.specTrack {
+  display: flex;
+  gap: var(--space-16);
+  white-space: nowrap;
+  will-change: transform;
+  color: var(--text-secondary);
+}
+
+/* ── COURSE 07 · THE ESTIMATE ──────────────────────────────── */
+
+.estimateInner {
+  grid-column: content;
+  display: grid;
+  gap: var(--space-12);
+}
+@media (min-width: 1024px) {
+  .estimateInner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--space-16);
+  }
+}
+.estimateAside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+.estimateBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  color: var(--text-secondary);
+  max-width: var(--measure-lead);
+}
+.estimateDirect {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-hair);
+}

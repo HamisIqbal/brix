@@ -1,0 +1,105 @@
+.support {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-10);
+  max-width: var(--measure-lead);
+  color: var(--text-secondary);
+}
+
+.layout {
+  grid-column: content;
+  display: grid;
+  gap: var(--space-16);
+}
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: var(--space-16);
+    align-items: start;
+  }
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+.direct {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.directRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.directValue {
+  position: relative;
+  width: fit-content;
+  color: var(--brix-white);
+}
+.directValue::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+@media (hover: hover) and (pointer: fine) {
+  .directValue:hover::after {
+    transform: scaleX(1);
+  }
+}
+.directValue:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.useful {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-hair);
+}
+.usefulList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+}
+.usefulItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* Never display:none a fill image — a hidden box resolves `sizes` to nothing
+   and the browser downloads the largest candidate in the srcset. It renders
+   at every width instead, cropped tighter on small screens. */
+.plate {
+  display: block;
+  max-width: 420px;
+}
+
+.formColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.conditions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-hair);
+  color: var(--text-secondary);
+}

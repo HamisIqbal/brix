@@ -1,0 +1,131 @@
+/* BRIX typography — visual design system §1.
+   Archivo declares. Geist Sans explains. Geist Mono records. */
+
+.display-1,
+.display-2,
+.display-3,
+.h1,
+.h2 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+/* Optical flush-left: Archivo's cap sidebearing makes mathematically
+   flush-left large type read as indented (§1.6). */
+.display-1,
+.display-2,
+.display-3 {
+  margin-left: -0.045em;
+}
+
+.display-1 {
+  font-size: var(--fs-display-1);
+  font-variation-settings: "wdth" var(--wdth-condensed), "wght" 800;
+  letter-spacing: var(--tr-display-1);
+  line-height: var(--lh-display);
+  text-transform: uppercase;
+}
+
+.display-2 {
+  font-size: var(--fs-display-2);
+  font-variation-settings: "wdth" var(--wdth-narrow), "wght" 800;
+  letter-spacing: var(--tr-display-2);
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.display-3 {
+  font-size: var(--fs-display-3);
+  font-variation-settings: "wdth" var(--wdth-mid), "wght" 700;
+  letter-spacing: var(--tr-display-3);
+  line-height: 0.92;
+}
+
+.h1 {
+  font-size: var(--fs-h1);
+  font-variation-settings: "wdth" var(--wdth-normal), "wght" 700;
+  letter-spacing: var(--tr-heading);
+  line-height: var(--lh-heading);
+}
+
+.h2 {
+  font-size: var(--fs-h2);
+  font-variation-settings: "wdth" var(--wdth-normal), "wght" 600;
+  letter-spacing: var(--tr-heading);
+  line-height: var(--lh-heading);
+}
+
+.h3 {
+  font-family: var(--font-body);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.body-lg {
+  font-size: var(--fs-body-lg);
+  font-weight: 400;
+  letter-spacing: -0.005em;
+  line-height: 1.55;
+}
+
+.body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+.body-sm {
+  font-size: var(--fs-body-sm);
+  letter-spacing: 0.005em;
+  line-height: 1.5;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  letter-spacing: var(--tr-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+  font-variant-ligatures: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-label {
+  font-family: var(--font-body);
+  font-size: var(--fs-button);
+  font-weight: 600;
+  letter-spacing: var(--tr-button);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* Index numerals are display type, never mono (§1.5). */
+.index-numeral {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" var(--wdth-condensed), "wght" 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tr-display-2);
+  line-height: 1;
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+.text-primary {
+  color: var(--text-primary);
+}
+.text-red {
+  color: var(--brix-red);
+}
+
+/* Tabular figures anywhere digits animate or update (§1.6). */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hanging punctuation on pull quotes. */
+.pull-quote {
+  hanging-punctuation: first;
+}

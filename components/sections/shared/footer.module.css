@@ -1,0 +1,134 @@
+/* COURSE 08 — The Foundation. The site's second authored moment. */
+
+.footer {
+  position: relative;
+  padding-top: var(--space-section-lg);
+  padding-bottom: 0;
+  border-top: 1px solid var(--border-hair);
+  overflow: hidden;
+}
+
+.upper {
+  display: grid;
+  gap: var(--space-10);
+  padding-bottom: var(--space-24);
+}
+@media (min-width: 768px) {
+  .upper {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: end;
+    gap: var(--space-16);
+  }
+}
+
+.cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  align-items: flex-start;
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.contactRow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.contactLabel {
+  color: var(--text-secondary);
+}
+.contactValue {
+  position: relative;
+  width: fit-content;
+  color: var(--brix-white);
+}
+.contactValue::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+@media (hover: hover) and (pointer: fine) {
+  .contactValue:hover::after {
+    transform: scaleX(1);
+  }
+}
+.contactValue:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.footerNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-6);
+  color: var(--text-secondary);
+}
+.footerNav a {
+  transition: color var(--dur-instant) var(--ease-set);
+}
+@media (hover: hover) and (pointer: fine) {
+  .footerNav a:hover {
+    color: var(--brix-white);
+  }
+}
+
+/* ── The monument ──────────────────────────────────────────── */
+
+.monument {
+  position: relative;
+  padding-bottom: var(--space-8);
+}
+
+.apex {
+  display: flex;
+  justify-content: center;
+  color: var(--brix-red);
+  margin-bottom: var(--space-6);
+}
+
+/* The foundation rule IS the mask boundary: the letters are revealed by it. */
+.foundation {
+  position: relative;
+  height: 2px;
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  z-index: 2;
+}
+
+.wordmark {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  line-height: 0.78;
+  font-size: clamp(5rem, 25vw, 24rem);
+  letter-spacing: -0.04em;
+  overflow: hidden;
+}
+
+.letter {
+  display: block;
+  will-change: clip-path, transform;
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-block: var(--space-6) var(--space-8);
+  color: var(--ink-600);
+  border-top: 1px solid var(--ink-400);
+  margin-top: var(--space-8);
+}

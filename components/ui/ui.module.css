@@ -1,0 +1,284 @@
+/* Shape devices and controls — visual design system §4.2, §7.2, §9.1 */
+
+/* ── Button ────────────────────────────────────────────────── */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-h-sm);
+  padding-inline: var(--control-px);
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    color var(--dur-instant) var(--ease-set),
+    border-color var(--dur-instant) var(--ease-set),
+    transform var(--dur-instant) var(--ease-set);
+}
+
+@media (min-width: 768px) {
+  .btn {
+    height: var(--control-h);
+  }
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* The sweep plane: a transform, never a width or background-position. */
+.fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+
+.btn:hover .fill,
+.btn:focus-visible .fill {
+  transform: scaleX(1);
+}
+
+/* Leaving: the light drains back out to the right, faster (exit law). */
+.btn:not(:hover):not(:focus-visible) .fill {
+  transform-origin: right center;
+  transition-duration: 144ms;
+}
+
+.label {
+  position: relative;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+
+.btn:hover .label,
+.btn:focus-visible .label {
+  transform: translateX(var(--move-label));
+}
+
+.icon {
+  position: relative;
+  display: block;
+  transition:
+    transform var(--dur-quick) var(--ease-set),
+    opacity var(--dur-quick) var(--ease-set);
+}
+
+/* Primary — the chevron is handed to you from the right. */
+.primary {
+  background: var(--brix-red-deep);
+  color: var(--brix-white);
+}
+.primary .fill {
+  background: var(--brix-red);
+}
+.primary:focus-visible {
+  outline-color: var(--focus-ring-on-red);
+}
+.primary .icon {
+  transform: translateX(calc(var(--move-icon) * -1));
+  opacity: 0;
+}
+.primary:hover .icon,
+.primary:focus-visible .icon {
+  transform: translateX(0);
+  opacity: 1;
+}
+.primary:active {
+  background: var(--red-900);
+  transform: translateY(1px);
+}
+
+/* Secondary */
+.secondary {
+  border: 1px solid var(--border-struct);
+  color: var(--brix-white);
+}
+.secondary .fill {
+  background: var(--brix-red);
+}
+.secondary:hover,
+.secondary:focus-visible {
+  border-color: var(--brix-red);
+}
+.secondary:hover .icon,
+.secondary:focus-visible .icon {
+  transform: translateX(var(--move-icon));
+}
+.secondary:active {
+  background: var(--red-900);
+}
+
+/* Ghost — one line replaces another; that substitution IS the interaction. */
+.ghost {
+  height: auto;
+  padding: 0;
+  overflow: visible;
+  color: var(--brix-white);
+}
+.ghostRules {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 1px;
+}
+.ghostRest,
+.ghostHover {
+  position: absolute;
+  inset: 0;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+.ghostRest {
+  background: var(--border-struct);
+  transform-origin: right center;
+}
+.ghostHover {
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition-delay: 80ms;
+}
+.ghost:hover .ghostRest,
+.ghost:focus-visible .ghostRest {
+  transform: scaleX(0);
+}
+.ghost:hover .ghostHover,
+.ghost:focus-visible .ghostHover {
+  transform: scaleX(1);
+}
+.ghost:hover .label,
+.ghost:focus-visible .label {
+  transform: none;
+}
+.ghost:hover .icon,
+.ghost:focus-visible .icon {
+  transform: translateX(var(--move-icon));
+}
+.ghost:active .ghostHover {
+  background: var(--red-900);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* ── Rule (D3) ─────────────────────────────────────────────── */
+
+.rule {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: var(--border-hair);
+}
+.ruleRed {
+  background: var(--brix-red);
+}
+.ruleStruct {
+  background: var(--border-struct);
+}
+
+/* ── Cross (D5) ────────────────────────────────────────────── */
+
+.cross {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+.cross::before,
+.cross::after {
+  content: '';
+  position: absolute;
+  background: var(--brix-red);
+}
+.cross::before {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+}
+.cross::after {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+}
+
+/* ── Eyebrow ───────────────────────────────────────────────── */
+
+.eyebrow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.eyebrowRule {
+  height: 1px;
+  width: 100%;
+  background: var(--brix-red);
+  transform-origin: left center;
+}
+.eyebrowLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+}
+
+/* ── Section header ────────────────────────────────────────── */
+
+.sectionHeader {
+  display: grid;
+  gap: var(--space-8);
+}
+@media (min-width: 1024px) {
+  .sectionHeader {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gutter);
+    align-items: end;
+  }
+  .sectionHeaderMain {
+    grid-column: 1 / span 6;
+  }
+  .sectionHeaderSupport {
+    grid-column: 8 / span 5;
+  }
+}
+.sectionHeaderMain {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+.sectionHeaderSupport {
+  color: var(--text-secondary);
+  max-width: var(--measure-lead);
+}
+
+/* ── The text aperture ─────────────────────────────────────── */
+
+.lineWrap {
+  display: block;
+}
+
+/* Type is set at line-height 0.86-0.92, so glyphs overflow their line box.
+   Pad the aperture out and pull it back by the same amount: layout is
+   unchanged, but ascenders and descenders are inside the clipped area. */
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.18em;
+  margin-block: -0.18em;
+  /* The aperture clips both axes, so give the line horizontal room for the
+     optical sidebearing correction and any glyph overhang. Type must still be
+     sized to fit its column — this is tolerance, not a licence to overflow. */
+  padding-inline: 0.08em;
+  margin-inline: -0.08em;
+}
+.maskInner {
+  display: block;
+}

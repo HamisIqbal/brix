@@ -1,0 +1,187 @@
+/* SERVICES — "The Elevation". Not service cards: a wall section drawing that
+   builds bottom-up as you scroll, in the real order of construction. */
+
+.layout {
+  grid-column: content;
+  display: grid;
+  gap: var(--space-12);
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: var(--space-16);
+    align-items: start;
+  }
+}
+
+/* Sticky rather than a GSAP pin: identical result, no pin-spacer to go wrong
+   on resize, and no layout jump on mobile browsers. */
+.diagramColumn {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .diagramColumn {
+    display: block;
+    position: sticky;
+    top: calc(var(--rail-h) + var(--space-8));
+    align-self: start;
+  }
+}
+
+.diagramLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  color: var(--text-secondary);
+}
+
+.diagram {
+  width: 100%;
+  height: auto;
+  max-height: 62svh;
+  overflow: visible;
+}
+
+.courseShape {
+  fill: none;
+  stroke: var(--ink-500);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition:
+    stroke var(--dur-quick) var(--ease-set),
+    fill var(--dur-quick) var(--ease-set);
+}
+.courseJoint {
+  stroke: var(--ink-500);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transition: stroke var(--dur-quick) var(--ease-set);
+}
+
+.courseActive .courseShape {
+  stroke: var(--brix-white);
+  fill: var(--ink-200);
+}
+.courseActive .courseJoint {
+  stroke: var(--brix-gray);
+}
+
+.courseGroup {
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .diagram:hover .courseGroup:not(:hover) .courseShape {
+    stroke: var(--ink-400);
+  }
+  .courseGroup:hover .courseShape {
+    stroke: var(--brix-red);
+  }
+}
+.courseGroup:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* The dimension line: red, drawn from the active course out to the label. */
+.dimension {
+  stroke: var(--brix-red);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  transform-origin: left center;
+  transition: transform var(--dur-base) var(--ease-set);
+}
+
+.courseIndex {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  letter-spacing: 0.1em;
+  fill: var(--ink-600);
+  transition: fill var(--dur-instant) var(--ease-set);
+}
+.courseActive .courseIndex {
+  fill: var(--brix-red);
+}
+
+/* ── The service entries ───────────────────────────────────── */
+
+.entries {
+  display: flex;
+  flex-direction: column;
+}
+
+.entry {
+  display: grid;
+  gap: var(--space-6);
+  padding-block: var(--space-16);
+  border-bottom: 1px solid var(--border-hair);
+}
+.entry:first-child {
+  padding-top: 0;
+}
+.entry:last-child {
+  border-bottom: 0;
+}
+
+.entryHead {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+}
+.entryIndex {
+  color: var(--text-secondary);
+  transition: color var(--dur-instant) var(--ease-set);
+}
+.entryActive .entryIndex {
+  color: var(--brix-red);
+}
+
+.entryStatement {
+  color: var(--brix-white);
+}
+.entryDetail {
+  color: var(--text-secondary);
+  max-width: var(--measure-lead);
+}
+
+.entryPrimary .entryName {
+  font-size: clamp(2.5rem, 7vw, 5rem);
+}
+
+.primaryTag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--brix-red);
+}
+
+/* Mobile: the elevation distributes into the flow. Each service is preceded
+   by its own fragment of the drawing, which draws on entry (§12.4). */
+.fragment {
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin-bottom: var(--space-6);
+}
+@media (min-width: 1024px) {
+  .fragment {
+    display: none;
+  }
+}
+
+.entryPlate {
+  margin-top: var(--space-4);
+  max-width: 380px;
+}
+
+.close {
+  grid-column: content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+  margin-top: var(--space-24);
+  padding-top: var(--space-16);
+  border-top: 1px solid var(--border-hair);
+}

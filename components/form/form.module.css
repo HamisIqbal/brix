@@ -1,0 +1,334 @@
+/* The work order — no boxes. Every field is a baseline rule (§7.8). */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+/* Segmented progress: the same instrument as the scroll progress rule,
+   applied to a different axis of progress. */
+.progress {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  height: 1px;
+  background: var(--ink-400);
+}
+.progressCell {
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+.progressCellOn {
+  transform: scaleX(1);
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  transition: color var(--dur-instant) var(--ease-set);
+}
+.labelIndex {
+  transition: color var(--dur-instant) var(--ease-set);
+}
+.field:focus-within .label {
+  color: var(--brix-white);
+}
+.field:focus-within .labelIndex {
+  color: var(--brix-red);
+}
+
+.required {
+  color: var(--brix-red);
+}
+
+.helper {
+  color: var(--text-secondary);
+}
+
+.inputWrap {
+  position: relative;
+}
+
+.input,
+.textarea {
+  display: block;
+  width: 100%;
+  padding: 0 0 var(--space-3);
+  font-size: 1.125rem;
+  color: var(--brix-white);
+  background: transparent;
+  border-bottom: 1px solid var(--border-struct);
+}
+.input {
+  height: var(--control-h-sm);
+}
+@media (min-width: 768px) {
+  .input {
+    height: var(--control-h);
+  }
+}
+.textarea {
+  min-height: 132px;
+  padding-top: var(--space-3);
+  resize: vertical;
+  line-height: 1.5;
+}
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--ink-600);
+}
+.input:focus,
+.textarea:focus {
+  outline: none;
+}
+
+/* The focus rule is a separate 2px element that DRAWS from the left —
+   a transform, not an animated border colour. */
+.focusRule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+.inputWrap:focus-within .focusRule {
+  transform: scaleX(1);
+}
+.fieldInvalid .focusRule {
+  transform: scaleX(1);
+  background: var(--brix-red);
+}
+
+/* A completed field is stamped with the site's registration mark. */
+.stamp {
+  position: absolute;
+  right: 0;
+  bottom: var(--space-3);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition:
+    opacity var(--dur-quick) var(--ease-set),
+    transform var(--dur-quick) var(--ease-set);
+}
+.stampOn {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* The message row is always present, even when empty. Adding and removing it
+   reflows the form under the visitor's cursor — click a chip right after
+   typing and the layout shifts mid-click, swallowing the click. */
+.errorSlot {
+  display: block;
+  min-height: 1.15rem;
+}
+
+/* Errors: a rule colour and an off-white message. Never red text (§2.4),
+   and never a shake — the visitor is trying to hire you. */
+.error {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--brix-white);
+}
+.errorIcon {
+  color: var(--brix-red);
+  flex: none;
+}
+
+/* ── Project type chips ────────────────────────────────────── */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.chip {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  padding: var(--space-3) var(--space-5);
+  min-height: var(--tap-min);
+  border: 1px solid var(--border-struct);
+  color: var(--text-secondary);
+  transition:
+    color var(--dur-instant) var(--ease-set),
+    border-color var(--dur-instant) var(--ease-set);
+}
+.chipFill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--brix-red-deep);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    border-color: var(--brix-red);
+    color: var(--brix-white);
+  }
+}
+.chip:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.chipOn {
+  color: var(--brix-white);
+  border-color: var(--brix-red-deep);
+}
+.chipOn .chipFill {
+  transform: scaleX(1);
+}
+/* Deselecting drains out to the right, faster. */
+.chip:not(.chipOn) .chipFill {
+  transform-origin: right center;
+  transition-duration: 144ms;
+}
+
+/* ── Submit ────────────────────────────────────────────────── */
+
+.submitRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4) var(--space-6);
+  padding-top: var(--space-6);
+}
+.status {
+  color: var(--text-secondary);
+}
+
+.submit {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: var(--control-h-sm);
+  padding-inline: var(--control-px);
+  background: var(--brix-red-deep);
+  color: var(--brix-white);
+}
+@media (min-width: 768px) {
+  .submit {
+    height: var(--control-h);
+  }
+}
+@media (max-width: 599px) {
+  .submit {
+    width: 100%;
+  }
+}
+.submit:focus-visible {
+  outline: 2px solid var(--focus-ring-on-red);
+  outline-offset: 2px;
+}
+.submit:disabled {
+  cursor: default;
+}
+
+/* SENDING: the fill drains left-to-right. There is no spinner anywhere
+   in this codebase — a rotating element violates "structures do not spin". */
+.drain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink-000);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.drainOn {
+  animation: drain 1200ms var(--ease-mechanical) infinite;
+}
+@keyframes drain {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  60% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+  61% {
+    transform: scaleX(1);
+    transform-origin: right center;
+  }
+  100% {
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .drainOn {
+    animation: none;
+    transform: scaleX(0.5);
+  }
+}
+
+.useful {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-hair);
+  color: var(--text-secondary);
+}
+.usefulItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The submit label swap: out upward, in from below. Keyed on the label text,
+   so React remounts the span and the keyframe replays. */
+.submitLabel {
+  display: inline-block;
+  padding-block: 0.16em;
+  margin-block: -0.16em;
+  animation: label-lay 200ms var(--ease-structural) both;
+}
+@keyframes label-lay {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(0.35em);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .submitLabel {
+    animation-duration: 1ms;
+  }
+}

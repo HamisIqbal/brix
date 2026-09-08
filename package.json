@@ -1,0 +1,46 @@
+{
+  "name": "brix",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "node --experimental-strip-types scripts/check-content.ts",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "media:poster": "node --experimental-strip-types scripts/build-video.ts",
+    "check:placeholders": "node --experimental-strip-types scripts/check-content.ts",
+    "qa": "node scripts/qa.mjs",
+    "qa:interact": "node scripts/interact.mjs",
+    "qa:nojs": "node scripts/nojs.mjs",
+    "qa:motion": "node scripts/parity.mjs",
+    "qa:vitals": "node scripts/vitals.mjs",
+    "qa:all": "npm run qa && npm run qa:interact && npm run qa:nojs && npm run qa:motion && npm run qa:vitals"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.23.12",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.8",
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.5.0",
+    "ffmpeg-static": "^5.2.0",
+    "playwright": "^1.63.0",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.7.0"
+  }
+}

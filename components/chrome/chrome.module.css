@@ -1,0 +1,354 @@
+/* Persistent viewport furniture — rail, menu, progress, cursor, transition. */
+
+/* ── Rail ──────────────────────────────────────────────────── */
+
+.rail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-rail);
+  height: var(--rail-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--margin);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+  pointer-events: none;
+}
+/* No scrim needed once the menu is open — the overlay is already the ground. */
+.railOverMenu {
+  background: none;
+}
+/* And nothing of the rail itself survives over the overlay but the trigger. */
+.railOverMenu .logo,
+.railOverMenu .counter {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.rail > * {
+  pointer-events: auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 46px;
+}
+@media (min-width: 768px) {
+  .logo {
+    height: 56px;
+  }
+}
+.logo img {
+  height: 100%;
+  width: auto;
+}
+
+.railRight {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.counter {
+  display: none;
+  color: var(--text-secondary);
+}
+@media (min-width: 768px) {
+  .counter {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}
+.counterNum {
+  position: relative;
+  display: inline-block;
+  width: 2ch;
+  overflow: hidden;
+  color: var(--brix-white);
+}
+
+/* ── Menu trigger (D8 -> X) ────────────────────────────────── */
+
+.trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  justify-content: flex-end;
+}
+
+.mark {
+  position: relative;
+  width: 24px;
+  height: 16px;
+  flex: none;
+}
+.bar {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  background: var(--brix-white);
+  transition:
+    width var(--dur-quick) var(--ease-set),
+    transform var(--dur-quick) var(--ease-mechanical),
+    opacity var(--dur-instant) var(--ease-set),
+    left var(--dur-quick) var(--ease-set);
+}
+/* Rest: a running-bond mark — two short courses over one offset long course. */
+.bar1 {
+  top: 0;
+  width: 16px;
+}
+.bar2 {
+  top: 7px;
+  width: 24px;
+}
+.bar3 {
+  top: 14px;
+  width: 16px;
+  left: 8px;
+}
+
+/* Hover: the courses slide into alignment. The bond resolves. */
+@media (hover: hover) and (pointer: fine) {
+  .trigger:hover .bar1,
+  .trigger:hover .bar3 {
+    width: 24px;
+    left: 0;
+  }
+}
+.trigger:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 4px;
+}
+
+/* Open: rotate into the X from the logo (30deg at icon scale). */
+.triggerOpen .bar1 {
+  width: 24px;
+  left: 0;
+  transform: translateY(7px) rotate(30deg);
+}
+.triggerOpen .bar3 {
+  width: 24px;
+  left: 0;
+  transform: translateY(-7px) rotate(-30deg);
+}
+.triggerOpen .bar2 {
+  transform: scaleX(0);
+  opacity: 0;
+}
+
+.triggerLabel {
+  position: relative;
+  display: none;
+  /* Fits the longer of the two labels: MENU / CLOSE. */
+  width: 6ch;
+  height: 1.2em;
+  overflow: hidden;
+  color: var(--text-secondary);
+}
+@media (min-width: 600px) {
+  .triggerLabel {
+    display: block;
+  }
+}
+.triggerLabelText {
+  position: absolute;
+  inset: 0;
+  transition:
+    transform 200ms var(--ease-mechanical),
+    opacity 200ms var(--ease-mechanical);
+}
+.triggerLabelOut {
+  transform: translateY(-4px);
+  opacity: 0;
+}
+.triggerLabelIn {
+  transform: translateY(4px);
+  opacity: 0;
+}
+.triggerLabelActive {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ── Menu overlay ──────────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-menu);
+  display: grid;
+  grid-template-rows: repeat(var(--course-count, 5), 1fr);
+}
+
+.course {
+  position: relative;
+  background: var(--ink-000);
+}
+
+.overlayInner {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--rail-h) var(--margin) var(--space-10);
+  overflow-y: auto;
+}
+
+.navList {
+  display: flex;
+  flex-direction: column;
+}
+
+.navItem {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding-block: clamp(6px, 1.2vh, 14px);
+  color: var(--brix-white);
+  position: relative;
+  width: fit-content;
+  transition:
+    color var(--dur-quick) var(--ease-set),
+    transform var(--dur-quick) var(--ease-set);
+}
+.navIndex {
+  color: var(--text-secondary);
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  transition: color var(--dur-instant) var(--ease-set);
+}
+.navLabel {
+  font-size: clamp(2.25rem, 9vw, 6rem);
+  line-height: 0.92;
+}
+.navRule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 2px;
+  height: 1px;
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .navList:hover .navItem:not(:hover) {
+    color: var(--ink-600);
+  }
+  .navList:hover .navItem:not(:hover) .navIndex {
+    color: var(--ink-600);
+  }
+  .navItem:hover {
+    transform: translateX(var(--move-shift));
+  }
+  .navItem:hover .navIndex {
+    color: var(--brix-red);
+  }
+  .navItem:hover .navRule {
+    transform: scaleX(1);
+  }
+}
+.navItem:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 6px;
+}
+.navItemActive .navRule {
+  transform: scaleX(1);
+}
+.navItemActive .navIndex {
+  color: var(--brix-red);
+}
+
+.overlayFoot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-8);
+  margin-top: var(--space-10);
+  color: var(--text-secondary);
+}
+.overlayFoot a {
+  transition: color var(--dur-instant) var(--ease-set);
+}
+.overlayFoot a:hover {
+  color: var(--brix-white);
+}
+
+/* ── Mobile action bar ─────────────────────────────────────── */
+
+.mobileBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-mobilebar);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 56px;
+  background: var(--ink-100);
+  border-top: 1px solid var(--border-struct);
+}
+@media (min-width: 768px) {
+  .mobileBar {
+    display: none;
+  }
+}
+.mobileBarItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brix-white);
+}
+.mobileBarItem + .mobileBarItem {
+  background: var(--brix-red-deep);
+  border-left: 1px solid var(--border-struct);
+}
+
+/* ── Page transition cover ─────────────────────────────────── */
+
+.cover {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-transition);
+  pointer-events: none;
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+}
+.coverCourse {
+  background: var(--ink-000);
+  /* Collapsed until Framer takes over, so a lazily-loaded cover can never
+     paint over the page between mount and its first frame. */
+  transform: scaleY(0);
+  transform-origin: bottom center;
+  will-change: transform;
+}
+
+/* ── Cursor follower ───────────────────────────────────────── */
+
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  border: 1px solid var(--brix-red);
+  pointer-events: none;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity var(--dur-quick) var(--ease-set);
+}
+.cursorVisible {
+  opacity: 1;
+}

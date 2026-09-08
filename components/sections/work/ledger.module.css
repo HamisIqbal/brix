@@ -1,0 +1,219 @@
+/* Project items are ledger rows, not cards (§7.6).
+   The highest-value interaction on the site, and it costs almost nothing. */
+
+.ledger {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--border-hair);
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 72px;
+  padding-block: var(--space-4);
+  padding-inline: var(--space-3);
+  border-bottom: 1px solid var(--border-hair);
+  isolation: isolate;
+  transition: color var(--dur-quick) var(--ease-set);
+}
+@media (min-width: 768px) {
+  .row {
+    min-height: 96px;
+    grid-template-columns: auto 1fr auto auto;
+    gap: var(--space-8);
+  }
+}
+
+/* The background sweeps from the left — a DRAW, not a fade. */
+.rowFill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink-100);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+
+.rowRule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--brix-red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+
+.rowIndex {
+  color: var(--text-secondary);
+  font-size: clamp(1.25rem, 3vw, 2.25rem);
+  transition: color var(--dur-instant) var(--ease-set);
+}
+
+.rowTitle {
+  min-width: 0;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+
+.rowCategory {
+  display: none;
+  color: var(--text-secondary);
+  transition: transform var(--dur-quick) var(--ease-set);
+  transition-delay: 40ms;
+}
+@media (min-width: 768px) {
+  .rowCategory {
+    display: block;
+  }
+}
+
+.rowApex {
+  color: var(--brix-red);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition:
+    opacity var(--dur-quick) var(--ease-set),
+    transform var(--dur-quick) var(--ease-set);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .ledger:hover .row:not(:hover) {
+    color: var(--ink-600);
+  }
+  .ledger:hover .row:not(:hover) .rowIndex,
+  .ledger:hover .row:not(:hover) .rowCategory {
+    color: var(--ink-600);
+  }
+  .row:hover .rowFill,
+  .row:hover .rowRule {
+    transform: scaleX(1);
+  }
+  .row:hover .rowIndex {
+    color: var(--brix-red);
+  }
+  .row:hover .rowTitle,
+  .row:hover .rowCategory {
+    transform: translateX(var(--move-shift));
+  }
+  .row:hover .rowApex {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.row:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: -2px;
+}
+.row:focus-visible .rowFill,
+.row:focus-visible .rowRule {
+  transform: scaleX(1);
+}
+.row:focus-visible .rowApex {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ── The cursor-following preview (pointer-fine only) ──────── */
+
+.preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-raised);
+  width: 240px;
+  pointer-events: none;
+  will-change: transform;
+  overflow: hidden;
+}
+.previewInner {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--ink-100);
+  overflow: hidden;
+}
+.previewImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.72) contrast(1.1) brightness(0.94);
+}
+.previewSpec {
+  padding: var(--space-2) var(--space-3);
+  background: var(--ink-000);
+  border-top: 1px solid var(--brix-red);
+  color: var(--text-secondary);
+}
+
+/* ── Work index plate grid ─────────────────────────────────── */
+
+.plateGrid {
+  display: grid;
+  gap: var(--space-12) var(--gutter);
+  margin-top: var(--space-24);
+}
+@media (min-width: 600px) {
+  .plateGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .plateGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-16) var(--gutter);
+  }
+  /* Alternating courses are offset by half a unit, exactly as brick is. */
+  .plateGrid > *:nth-child(3n + 2) {
+    margin-top: var(--space-16);
+  }
+}
+
+.plateLink {
+  display: block;
+}
+.plateLink:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 6px;
+}
+
+/* ── Project detail ────────────────────────────────────────── */
+
+.projectHead {
+  display: grid;
+  gap: var(--space-8);
+}
+@media (min-width: 1024px) {
+  .projectHead {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: var(--space-16);
+    align-items: end;
+  }
+}
+.projectMeta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  color: var(--text-secondary);
+}
+.projectBody {
+  max-width: var(--measure-lead);
+  color: var(--text-secondary);
+}
+.projectFoot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  align-items: center;
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--border-hair);
+}

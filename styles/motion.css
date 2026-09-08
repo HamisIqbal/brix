@@ -1,0 +1,146 @@
+/* BRIX motion utilities — motion system §19.3.
+   Four verbs: DRAW (a line extends), LAY (a mass arrives through an aperture),
+   SET (a present thing adjusts), CARRY (scroll-bound displacement).
+
+   Initial states live here, in CSS, present in the server HTML — so there is no
+   FOUC and no hydration mismatch. GSAP only *releases* them. They are scoped to
+   [data-js="true"], which an inline script sets before hydration, so a page with
+   no JS is never hidden by a state only JS could undo. */
+
+/* ── LAY: the closed apertures ─────────────────────────────── */
+
+/* No will-change here. §15.3 is explicit: it is applied only for the duration
+   of a known animation, by the timeline that owns it — never by a stylesheet
+   rule that promotes every hidden element from first paint. */
+
+/* Text: transform only, inside a fixed overflow aperture. Never an animated
+   clip-path — see components/ui/Headline.tsx. */
+[data-js="true"] [data-reveal="line"]:not([data-revealed]),
+[data-js="true"] [data-reveal="body"]:not([data-revealed]) {
+  transform: translateY(105%);
+}
+
+[data-js="true"] [data-reveal="meta"]:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(var(--move-meta));
+}
+
+[data-js="true"] [data-reveal="rule"]:not([data-revealed]) {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+[data-js="true"] [data-reveal="plate"]:not([data-revealed]) {
+  clip-path: inset(0 0 100% 0);
+}
+[data-js="true"] [data-reveal="plate"][data-dir="bottom"]:not([data-revealed]) {
+  clip-path: inset(100% 0 0 0);
+}
+[data-js="true"] [data-reveal="plate"][data-dir="left"]:not([data-revealed]) {
+  clip-path: inset(0 100% 0 0);
+}
+[data-js="true"] [data-reveal="plate"][data-dir="right"]:not([data-revealed]) {
+  clip-path: inset(0 0 0 100%);
+}
+
+[data-js="true"] [data-reveal="plate"]:not([data-revealed]) [data-plate-img] {
+  transform: scale(var(--scale-enter));
+}
+
+/* ── The hero's authored entrance ──────────────────────────── */
+
+[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='line'],
+[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='sub'] {
+  transform: translateY(105%);
+}
+[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='rule'] {
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='plate'] {
+  clip-path: inset(100% 0 0 0);
+}
+[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='strip'],
+[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='cue'] {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero] {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Nothing is ever hidden when motion is reduced — the page renders complete. */
+@media (prefers-reduced-motion: reduce) {
+  [data-js="true"] [data-reveal]:not([data-revealed]) {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    will-change: auto;
+  }
+}
+
+/* ── DRAW: a line extends from an origin ───────────────────── */
+
+.u-draw {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-quick) var(--ease-set);
+}
+.u-draw[data-drawn] {
+  transform: scaleX(1);
+}
+
+/* ── SET: in-place adjustment, always a response ───────────── */
+
+.u-set {
+  transition:
+    color var(--dur-instant) var(--ease-set),
+    background-color var(--dur-instant) var(--ease-set),
+    border-color var(--dur-instant) var(--ease-set),
+    opacity var(--dur-quick) var(--ease-set),
+    transform var(--dur-quick) var(--ease-set);
+}
+
+/* ── DIM: sibling dimming, the site's recurring hover law ──── */
+
+@media (hover: hover) and (pointer: fine) {
+  .u-dim:has(> [data-dimmable]:hover) > [data-dimmable]:not(:hover) {
+    color: var(--ink-600);
+  }
+  .u-dim > [data-dimmable] {
+    transition: color var(--dur-quick) var(--ease-set);
+  }
+}
+
+/* ── Focus is never reduced and never delayed ──────────────── */
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+.focus-ring-inverse:focus-visible {
+  outline: 2px solid var(--focus-ring-on-red);
+  outline-offset: 2px;
+}
+
+/* ── Scroll cue idle loop (motion system §7.6) ─────────────── */
+
+@keyframes cue-course {
+  0%,
+  100% {
+    background-color: var(--ink-600);
+  }
+  18% {
+    background-color: var(--brix-white);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .u-draw {
+    transition-duration: var(--dur-instant);
+  }
+}
