@@ -30,7 +30,7 @@ export default function Error({
         GAVE WAY
       </h1>
       <p className="body-lg text-secondary">
-        The page did not load. Try again, or call 901-350-9597.
+        The page did not load. Try again, or call 901-295-6537.
       </p>
       <button type="button" className="btn-label" onClick={reset} style={{ color: 'var(--brix-red)' }}>
         TRY AGAIN

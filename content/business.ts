@@ -4,7 +4,7 @@
  * <Fact>, never invented and never approximated.
  */
 export const business = {
-  phone: { raw: '+19013509597', display: '901-350-9597' },
+  phone: { raw: '+19012956537', display: '901-295-6537' },
   email: 'brixmasonrycontact@gmail.com',
   freeEstimates: true,
 

@@ -19,7 +19,7 @@ Where a page would conventionally carry such a claim, the copy either states som
 ```
 Business name    BRIX Masonry & Concrete
 Email            brixmasonrycontact@gmail.com
-Phone            +1 901-350-9597
+Phone            +1 901-295-6537
 ```
 
 Plus the client-supplied tagline: *Professional Masonry & Concrete · Brick · Block · Custom Work · Free Estimates.* "Free estimates" is therefore a supplied claim and may be used; nothing else may be inferred from it.
@@ -67,7 +67,7 @@ Six labels. Nothing else appears on a button anywhere on the site.
 | `REQUEST AN ESTIMATE` | Primary | Home hero, Services close, Contact, footer |
 | `SEND REQUEST` | Primary | Contact form submit only |
 | `SEE THE WORK` | Secondary | Home, Services, About |
-| `CALL 901-350-9597` | Secondary / mobile bar | Rail, footer, mobile action bar |
+| `CALL 901-295-6537` | Secondary / mobile bar | Rail, footer, mobile action bar |
 | `WHAT WE LAY` | Ghost | Home → Services |
 | `NEXT PROJECT` | Ghost | Work detail → next |
 
@@ -120,7 +120,7 @@ Alternate, shorter:
 **Technical strip** (mono, under the sub-line — the work-order line):
 
 ```
-BRICK / BLOCK / CONCRETE        FREE ESTIMATES        901-350-9597
+BRICK / BLOCK / CONCRETE        FREE ESTIMATES        901-295-6537
 ```
 
 **Hero CTA:** `REQUEST AN ESTIMATE` · secondary `SEE THE WORK` · note *Estimates are free.*
@@ -230,7 +230,7 @@ Support:
 Alternate contact block:
 
 ```
-Call     901-350-9597
+Call     901-295-6537
 Email    brixmasonrycontact@gmail.com
 ```
 
@@ -468,7 +468,7 @@ Support:
 ### 6.2 Direct contact block
 
 ```
-CALL       901-350-9597
+CALL       901-295-6537
 EMAIL      brixmasonrycontact@gmail.com
 ```
 
@@ -531,7 +531,7 @@ Written as statements of what is missing, not as accusations. No exclamation mar
 | PROJECT TYPE | none selected | Select a project type. |
 | THE JOB | empty | Describe the job. |
 | THE JOB | under 20 characters | A little more detail helps the estimate. |
-| Form | submit failed | That did not send. Call 901-350-9597 or email brixmasonrycontact@gmail.com. |
+| Form | submit failed | That did not send. Call 901-295-6537 or email brixmasonrycontact@gmail.com. |
 | Form | rate-limited | Too many attempts. Try again shortly. |
 
 The submit-failure message **gives the two working alternatives inline.** A failed contact form on a contractor site is a lost job; the recovery path has to be in the message itself, not on a page the visitor has to find.
@@ -570,7 +570,7 @@ The submit-failure message **gives the two working alternatives inline.** A fail
 Headline   READY TO / GET A NUMBER
 CTA        REQUEST AN ESTIMATE          (note: Estimates are free.)
 
-CALL       901-350-9597
+CALL       901-295-6537
 EMAIL      brixmasonrycontact@gmail.com
 INSTAGRAM  + Instagram
 ```
@@ -650,7 +650,7 @@ export const site = {
 
 ```ts
 export const business = {
-  phone:       { raw: '+19013509597', display: '901-350-9597' },
+  phone:       { raw: '+19012956537', display: '901-295-6537' },
   email:       'brixmasonrycontact@gmail.com',
   instagram:   '[[CLIENT: INSTAGRAM]]',
   serviceArea: '[[CLIENT: SERVICE AREA]]',
@@ -669,7 +669,7 @@ export const cta = {
   estimate: 'REQUEST AN ESTIMATE',
   submit:   'SEND REQUEST',
   work:     'SEE THE WORK',
-  call:     'CALL 901-350-9597',
+  call:     'CALL 901-295-6537',
   services: 'WHAT WE LAY',
   next:     'NEXT PROJECT',
   note:     'Estimates are free.',
