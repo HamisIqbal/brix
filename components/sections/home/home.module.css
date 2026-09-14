@@ -560,6 +560,7 @@
   max-width: var(--measure-lead);
 }
 .estimateDirect {
+  overflow-wrap: anywhere;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);

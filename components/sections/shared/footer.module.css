@@ -44,7 +44,10 @@
 .contactValue {
   position: relative;
   width: fit-content;
+  max-width: 100%;
   color: var(--brix-white);
+  /* The email address is one unbreakable word wider than a 320px phone. */
+  overflow-wrap: anywhere;
 }
 .contactValue::after {
   content: '';
@@ -115,6 +118,11 @@
   font-size: clamp(5rem, 25vw, 24rem);
   letter-spacing: -0.04em;
   overflow: hidden;
+  /* The row is full-bleed and clips (the letters rise from behind the
+     foundation rule), so without an inset the B and X were cut by the
+     viewport edge — display-1's optical -0.045em pull made it worse. */
+  padding-inline: var(--margin);
+  margin-left: 0;
 }
 
 .letter {

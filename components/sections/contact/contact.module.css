@@ -39,7 +39,9 @@
 .directValue {
   position: relative;
   width: fit-content;
+  max-width: 100%;
   color: var(--brix-white);
+  overflow-wrap: anywhere;
 }
 .directValue::after {
   content: '';

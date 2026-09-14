@@ -36,17 +36,12 @@ export function MotionProvider({ children }: { children: ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null)
   const [lenisState, setLenisState] = useState<Lenis | null>(null)
 
-  // Mark the document as JS-capable so the CSS initial reveal states apply.
-  // Done in an effect on documentElement (a data attribute React does not
-  // manage), so there is no hydration mismatch.
-  useEffect(() => {
-    document.documentElement.setAttribute('data-js', 'true')
-    return () => document.documentElement.removeAttribute('data-js')
-  }, [])
-
+  // data-js is stamped before first paint by the boot script in app/layout.tsx.
+  // data-motion tells that script's failsafe the reveal states are owned now.
   useEffect(() => {
     registerGsap()
     refreshMotionTokens()
+    document.documentElement.setAttribute('data-motion', '')
     setReady(true)
   }, [])
 

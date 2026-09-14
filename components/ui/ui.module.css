@@ -232,11 +232,18 @@
 
 /* ── Section header ────────────────────────────────────────── */
 
+/* The header splits into its 6 + 5 column layout from its OWN width, not the
+   viewport's. It is also used inside half-width columns (Method, Estimate),
+   where a viewport query squeezed the headline into six columns of a column
+   and broke "TELL US / THE JOB" into four lines. */
+.sectionHeaderWrap {
+  container-type: inline-size;
+}
 .sectionHeader {
   display: grid;
   gap: var(--space-8);
 }
-@media (min-width: 1024px) {
+@container (min-width: 840px) {
   .sectionHeader {
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--gutter);

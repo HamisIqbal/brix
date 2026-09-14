@@ -77,7 +77,9 @@ export function ContactForm() {
     setFormError(null)
 
     try {
-      const res = await fetch('/api/contact', {
+      // A PHP handler shipped in public/ — the site is a static export, and
+      // Hostinger runs PHP natively. Not available under `next dev`.
+      const res = await fetch('/contact.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data),

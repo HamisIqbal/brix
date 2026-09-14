@@ -10,7 +10,7 @@ const compat = new FlatCompat({ baseDirectory: __dirname })
 const config = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
-    ignores: ['.next/**', 'node_modules/**', 'scripts/**'],
+    ignores: ['.next/**', 'out/**', 'node_modules/**', 'scripts/**'],
   },
   {
     rules: {
@@ -31,7 +31,6 @@ const config = [
     // The named motion owners — every one appears on the client-component
     // census. A file not on this list may not import an animation library.
     ignores: [
-      'components/sections/home/HeroTimeline.tsx',
       'components/sections/home/StringLine.tsx',
       'components/sections/home/SpecStrip.tsx',
       'components/sections/services/ElevationDiagram.tsx',

@@ -4,8 +4,12 @@ export const site = {
   tagline: 'Professional Masonry & Concrete · Brick · Block · Custom Work · Free Estimates',
   taglineShort: 'Brick · Block · Concrete',
   description: 'Brick masonry, block and concrete work. Free estimates.',
-  /** Replace with the production origin before launch. */
-  url: 'https://brixmasonry.example',
+  /**
+   * The production origin, no trailing slash. Used for canonical links,
+   * Open Graph and the sitemap — set it before the deploy build, either here
+   * or with NEXT_PUBLIC_SITE_URL in .env.production.
+   */
+  url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://brixmasonry.example').replace(/\/+$/, ''),
   nav: [
     { index: '01', label: 'HOME', href: '/' },
     { index: '02', label: 'WORK', href: '/work' },

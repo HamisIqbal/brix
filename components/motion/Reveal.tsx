@@ -30,7 +30,9 @@ export function Reveal({ children, id, className }: RevealProps) {
       const root = ref.current
       if (!root || !ready) return
 
-      if (reducedMotion) {
+      // Reduced motion — or the boot failsafe already released the page
+      // because hydration was slow: content is on screen, never re-hide it.
+      if (reducedMotion || document.documentElement.getAttribute('data-js') !== 'true') {
         resolveInstantly(root)
         return
       }

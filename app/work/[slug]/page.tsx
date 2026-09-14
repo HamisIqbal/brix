@@ -14,6 +14,9 @@ import s from '@/components/sections/work/ledger.module.css'
 
 type Params = { params: Promise<{ slug: string }> }
 
+// Static export: only the listed projects exist; anything else is the 404 page.
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }))
 }

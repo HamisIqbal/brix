@@ -4,8 +4,10 @@
 
    Initial states live here, in CSS, present in the server HTML — so there is no
    FOUC and no hydration mismatch. GSAP only *releases* them. They are scoped to
-   [data-js="true"], which an inline script sets before hydration, so a page with
-   no JS is never hidden by a state only JS could undo. */
+   [data-js="true"], which the inline script in app/layout.tsx sets before
+   first paint, so a page with no JS is never hidden by a state only JS could
+   undo — and a page whose JS never arrives is released by that script's
+   failsafe. */
 
 /* ── LAY: the closed apertures ─────────────────────────────── */
 
@@ -49,27 +51,68 @@
 
 /* ── The hero's authored entrance ──────────────────────────── */
 
-[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='line'],
-[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='sub'] {
-  transform: translateY(105%);
+/* Pure CSS, from the first painted frame. It never waits on hydration and
+   never hides server-rendered text that has already painted — the previous
+   JS-driven version painted the hero, hid it when React hydrated, then
+   replayed it, which read as lag. transform/opacity only, so it runs on the
+   compositor even while the main thread is busy hydrating.
+
+   The inline script in app/layout.tsx stamps [data-hero-played] on <html>
+   for the rest of the session, so the entrance plays once per visit. */
+
+@keyframes hero-lay {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
-[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='rule'] {
-  transform: scaleX(0);
-  transform-origin: left center;
+@keyframes hero-set {
+  from {
+    opacity: 0;
+    transform: translateY(var(--move-meta));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='plate'] {
-  clip-path: inset(100% 0 0 0);
+@keyframes hero-ground {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='strip'],
-[data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero='cue'] {
-  opacity: 0;
+
+html:not([data-hero-played]) [data-hero='line'] {
+  animation: hero-lay 900ms var(--ease-structural) 60ms both;
+}
+/* Two lines, one beat apart — the bond offset in time. */
+html:not([data-hero-played]) h1 > span:nth-child(2) > [data-hero='line'] {
+  animation-delay: 140ms;
+}
+html:not([data-hero-played]) [data-hero='sub'] {
+  animation: hero-lay 700ms var(--ease-structural) 320ms both;
+}
+html:not([data-hero-played]) [data-hero='strip'] {
+  animation: hero-set 480ms var(--ease-set) 480ms both;
+}
+html:not([data-hero-played]) [data-hero='strip'] + [data-hero='strip'] {
+  animation-delay: 560ms;
+}
+html:not([data-hero-played]) [data-hero='cue'] {
+  animation: hero-ground 480ms var(--ease-set) 800ms both;
+}
+html:not([data-hero-played]) [data-hero='plate'] {
+  animation: hero-ground 900ms var(--ease-set) both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  [data-js="true"] [data-hero-scope]:not([data-hero-done]) [data-hero] {
-    clip-path: none !important;
-    transform: none !important;
-    opacity: 1 !important;
+  [data-hero] {
+    animation: none !important;
   }
 }
 

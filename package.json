@@ -5,8 +5,8 @@
   "scripts": {
     "prebuild": "node --experimental-strip-types scripts/check-content.ts",
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "build": "next build && node scripts/optimize-images.mjs",
+    "start": "npx serve out -l 3210",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "media:poster": "node --experimental-strip-types scripts/build-video.ts",

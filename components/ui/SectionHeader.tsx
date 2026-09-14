@@ -26,16 +26,18 @@ export function SectionHeader({
   className?: string
 }) {
   return (
-    <div className={clsx(s.sectionHeader, className)}>
-      <div className={s.sectionHeaderMain}>
-        <Eyebrow index={eyebrow.index} label={eyebrow.label} />
-        <Headline lines={headline} scale={scale} as={as} id={headingId} />
-      </div>
-      {support && (
-        <div className={s.sectionHeaderSupport}>
-          <Support>{support}</Support>
+    <div className={clsx(s.sectionHeaderWrap, className)}>
+      <div className={s.sectionHeader}>
+        <div className={s.sectionHeaderMain}>
+          <Eyebrow index={eyebrow.index} label={eyebrow.label} />
+          <Headline lines={headline} scale={scale} as={as} id={headingId} />
         </div>
-      )}
+        {support && (
+          <div className={s.sectionHeaderSupport}>
+            <Support>{support}</Support>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
