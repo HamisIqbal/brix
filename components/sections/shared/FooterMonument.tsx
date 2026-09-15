@@ -59,7 +59,11 @@ export function FooterMonument() {
           yPercent: 0,
           duration: t.major,
           stagger: t.beat,
-          onComplete: () => letters.forEach((l) => (l.style.willChange = 'auto')),
+          onComplete: () =>
+            letters.forEach((l) => {
+              l.style.willChange = 'auto'
+              l.style.clipPath = 'none'
+            }),
         },
         0.56,
       )

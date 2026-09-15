@@ -199,9 +199,18 @@
   z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: var(--rail-h) var(--margin) var(--space-10);
   overflow-y: auto;
+  overscroll-behavior: contain;
+}
+/* Auto margins centre the block like justify-content: center, but when the
+   content is taller than a short laptop viewport it stays scrollable from the
+   top instead of being pushed past both edges. */
+.overlayInner > :first-child {
+  margin-top: auto;
+}
+.overlayInner > :last-child {
+  margin-bottom: auto;
 }
 
 .navList {
@@ -226,8 +235,12 @@
   font-size: clamp(0.75rem, 2vw, 1rem);
   transition: color var(--dur-instant) var(--ease-set);
 }
-.navLabel {
-  font-size: clamp(2.25rem, 9vw, 6rem);
+/* Scoped under .navItem so it outranks the global .display-2 size.
+   Height-aware as well as width-aware: five courses at display-2 size
+   overflow a 1366x650 laptop and push the phone and email off the bottom. */
+.navItem .navLabel {
+  font-size: min(var(--fs-display-2), max(2.25rem, 11vh));
+  font-size: min(var(--fs-display-2), max(2.25rem, 11dvh));
   line-height: 0.92;
 }
 .navRule {

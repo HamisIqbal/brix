@@ -82,6 +82,7 @@ function MenuOverlayInner({ open, onClose }: { open: boolean; onClose: () => voi
 
           <m.div
             className={s.overlayInner}
+            data-lenis-prevent
             variants={{
               closed: { opacity: reducedMotion ? 0 : 1 },
               open: { opacity: 1 },

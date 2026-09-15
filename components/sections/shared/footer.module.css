@@ -127,6 +127,10 @@
 
 .letter {
   display: block;
+  /* Each span holds one glyph, so tracking only shrinks its box — and the
+     reveal clip-path crops to that box, slicing the right edge off B, R and X.
+     The row's space-between does the spacing instead. */
+  letter-spacing: 0;
   will-change: clip-path, transform;
 }
 
