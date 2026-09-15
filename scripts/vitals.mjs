@@ -14,11 +14,15 @@ for (const r of routes) {
   })
   await p.goto(BASE+r, { waitUntil:'networkidle' })
   await p.waitForTimeout(2500)
+  // Browsers finalise LCP at the first scroll or tap, but a scripted scrollTo
+  // isn't input — so read it now, or the footer revealed below becomes "LCP".
+  const lcp = await p.evaluate(() => Math.round(window.__lcp))
   // Scroll to trigger every reveal, then measure shift caused by animation.
   await p.evaluate(async()=>{ const s=innerHeight*0.8
     for(let y=0;y<document.body.scrollHeight;y+=s){scrollTo(0,y); await new Promise(r=>setTimeout(r,120))} })
   await p.waitForTimeout(1200)
-  const v = await p.evaluate(()=>({ cls:+window.__cls.toFixed(4), lcp:Math.round(window.__lcp) }))
+  const v = await p.evaluate(()=>({ cls:+window.__cls.toFixed(4) }))
+  v.lcp = lcp
   console.log(`${r.padEnd(11)} CLS ${String(v.cls).padEnd(8)} LCP ${v.lcp}ms`)
   if (v.cls > 0.02) problems.push(`${r}: CLS ${v.cls}`)
   if (v.lcp > 2500) problems.push(`${r}: LCP ${v.lcp}ms`)

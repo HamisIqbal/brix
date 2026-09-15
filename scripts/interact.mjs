@@ -134,6 +134,12 @@ console.log('\nROUTE TRANSITIONS')
 console.log('\nCONTACT FORM')
 {
   const { p, ctx } = await page(1440)
+  // Stub the handler: the real one emails the client through Resend.
+  let posted = null
+  await p.route(/\/api\/contact\/?$/, (route) => {
+    posted = route.request().postDataJSON()
+    route.fulfill({ status: 200, json: { ok: true } })
+  })
   await p.goto(`${BASE}/contact`, { waitUntil: 'networkidle' })
   await p.waitForTimeout(1200)
 
@@ -189,6 +195,9 @@ console.log('\nCONTACT FORM')
 
   const label = (await p.locator('form button[type="submit"]').textContent())?.trim()
   label?.includes('RECEIVED') ? ok('submit succeeds') : fail('submit succeeds', String(label))
+  posted?.email === 'sam@example.com' && posted?.projectType === 'BRICK'
+    ? ok('posts the form to /api/contact')
+    : fail('posts the form to /api/contact', JSON.stringify(posted))
 
   const disabled = await p.locator('form button[type="submit"]').isDisabled()
   disabled ? ok('button locks after send') : fail('button locks after send')

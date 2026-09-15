@@ -22,6 +22,10 @@ async function settle(route, reducedMotion) {
       // the settled document rather than the composited frame.
       const cs = getComputedStyle(el)
       if (el.offsetWidth === 0 && el.offsetHeight === 0) continue
+      // The hero carousel only mounts its later slides when it can rotate,
+      // which reduced motion never does. It's an absolutely placed backdrop,
+      // so it has no bearing on layout either way.
+      if (el.closest('[data-hero="plate"]')) continue
       if (cs.opacity === '0' || cs.visibility === 'hidden') out.hidden++
       let top = 0
       for (let n = el; n; n = n.offsetParent) top += n.offsetTop
