@@ -9,7 +9,7 @@ export const site = {
    * Open Graph and the sitemap — set it before the deploy build, either here
    * or with NEXT_PUBLIC_SITE_URL in .env.production.
    */
-  url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://brixmasonrytn.com').replace(/\/+$/, ''),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.brixmasonrytn.com').replace(/\/+$/, ''),
   nav: [
     { index: '01', label: 'HOME', href: '/' },
     { index: '02', label: 'WORK', href: '/work' },
