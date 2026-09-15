@@ -161,6 +161,8 @@
   /* The rail sits ABOVE the overlay: the trigger morphs into the close X, so
      it has to stay visible and clickable while the menu is open. */
   --z-rail: 75;
+  /* Dialogs cover the rail too, but the cursor still reads above them. */
+  --z-dialog: 78;
   --z-cursor: 80;
   --z-transition: 90;
   --z-skip: 100;

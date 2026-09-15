@@ -1,6 +1,6 @@
 import { chromium } from 'playwright'
 
-const BASE = 'http://localhost:3210'
+const BASE = process.env.BASE ?? 'http://localhost:3210'
 const problems = []
 const ok = (label) => console.log('  PASS', label)
 const fail = (label, detail) => {
@@ -137,7 +137,14 @@ console.log('\nCONTACT FORM')
   // Stub the handler: the real one emails the client through Resend.
   let posted = null
   await p.route(/\/api\/contact\/?$/, (route) => {
-    posted = route.request().postDataJSON()
+    // Multipart: pull the text fields out of the raw body.
+    const raw = route.request().postDataBuffer()?.toString('latin1') ?? ''
+    const field = (name) => raw.match(new RegExp(`name="${name}"\\r\\n\\r\\n([^\\r]*)`))?.[1]
+    posted = {
+      email: field('email'),
+      projectType: field('projectType'),
+      media: [...raw.matchAll(/name="media"; filename="([^"]+)"/g)].map((m) => m[1]),
+    }
     route.fulfill({ status: 200, json: { ok: true } })
   })
   await p.goto(`${BASE}/contact`, { waitUntil: 'networkidle' })
@@ -155,6 +162,14 @@ console.log('\nCONTACT FORM')
 
   const invalid = await p.locator('#field-name[aria-invalid="true"]').count()
   invalid === 1 ? ok('aria-invalid set') : fail('aria-invalid set')
+
+  // The still-needed list names every missing requirement before sending.
+  const missingItems = await p.locator('[data-missing-item]').count()
+  missingItems === 4 ? ok('still-needed list shows 4 items') : fail('still-needed list', String(missingItems))
+  await p.locator('[data-missing-item="projectType"]').click()
+  await p.waitForTimeout(600)
+  const jumped = await p.evaluate(() => document.activeElement?.getAttribute('data-chip'))
+  jumped ? ok('still-needed item jumps to its field') : fail('still-needed item jumps to its field')
 
   // Bad email, checked on blur only.
   await p.fill('#field-name', 'Sam Rivera')
@@ -190,17 +205,43 @@ console.log('\nCONTACT FORM')
   await p.locator('#field-job').blur()
   await p.waitForTimeout(300)
 
+  const ready = await p.locator('[data-missing-item]').count()
+  ready === 0 ? ok('still-needed list clears when complete') : fail('still-needed list clears', String(ready))
+
+  // Optional media: one valid image is accepted, a non-media file is refused.
+  const png = Buffer.from(
+    'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
+    'base64',
+  )
+  await p.setInputFiles('#field-media', [
+    { name: 'site.png', mimeType: 'image/png', buffer: png },
+    { name: 'notes.txt', mimeType: 'text/plain', buffer: Buffer.from('x') },
+  ])
+  await p.waitForTimeout(300)
+  const rows = await p.locator('[aria-label="Attached files"] li').count()
+  rows === 1 ? ok('media attaches, non-media refused') : fail('media attaches', String(rows))
+
   await p.locator('form button[type="submit"]').click()
   await p.waitForTimeout(2500)
 
   const label = (await p.locator('form button[type="submit"]').textContent())?.trim()
   label?.includes('RECEIVED') ? ok('submit succeeds') : fail('submit succeeds', String(label))
-  posted?.email === 'sam@example.com' && posted?.projectType === 'BRICK'
-    ? ok('posts the form to /api/contact')
+  posted?.email === 'sam@example.com' && posted?.projectType === 'BRICK' && posted?.media?.[0] === 'site.png'
+    ? ok('posts the form and media to /api/contact')
     : fail('posts the form to /api/contact', JSON.stringify(posted))
 
   const disabled = await p.locator('form button[type="submit"]').isDisabled()
   disabled ? ok('button locks after send') : fail('button locks after send')
+
+  const dialog = p.locator('[data-success][role="dialog"]')
+  ;(await dialog.isVisible()) && (await dialog.textContent())?.includes('sam@example.com')
+    ? ok('success dialog confirms the request')
+    : fail('success dialog confirms the request')
+  await p.keyboard.press('Escape')
+  await p.waitForTimeout(400)
+  const closed = (await dialog.count()) === 0
+  const cleared = (await p.inputValue('#field-name')) === ''
+  closed && cleared ? ok('dialog closes and form resets') : fail('dialog closes and form resets')
 
   await ctx.close()
 }
